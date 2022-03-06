@@ -11,11 +11,15 @@ namespace GameJom
     {
         public static GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
-        public static MouseState mouseState;
-        public static Button button = new Button();
         public static double ScreenSizeAdjustment = 1;
+        public static int XAdjustedScreen;
+        public static int YAdjustedScreen;
+        public static Button button = new Button();
         public static int GameState = 1;
         public static bool Paused = false;
+        public static MouseState mouseState;
+        int XMousePos;
+        int YMousePos;
         Texture2D PlayerTexture;
         Rectangle Player = new Rectangle(0, 0, 96, 96);
         public Game1()
@@ -33,12 +37,18 @@ namespace GameJom
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = true;
+            double num = (double)graphics.PreferredBackBufferWidth / 3840;
+            if (num > (double)graphics.PreferredBackBufferHeight / 2160)
+            {
+                num = (double)graphics.PreferredBackBufferHeight / 2160;
+            }
+            XAdjustedScreen = (int)(3840 * num);
+            YAdjustedScreen = (int)(2160 * num);
+        ScreenSizeAdjustment = num;
             graphics.ApplyChanges();
-            this.IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -72,15 +82,13 @@ namespace GameJom
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            mouseState = Mouse.GetState();
+            XMousePos = mouseState.X;
+            YMousePos = mouseState.Y;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            button.ButtonUpdate(new Rectangle(300, 300, 1000, 300), PlayerTexture, GameState == 1);
-            if (button.Pressed)
-            {
-                GameState = 2;
-            }
+
             if (Keyboard.GetState().IsKeyDown(Keys.W))
                 Player.Y -= 10;
             if (Keyboard.GetState().IsKeyDown(Keys.S))
@@ -89,6 +97,7 @@ namespace GameJom
                 Player.X -= 10;
             if (Keyboard.GetState().IsKeyDown(Keys.D))
                 Player.X += 10;
+
             base.Update(gameTime);
         }
 
@@ -99,11 +108,21 @@ namespace GameJom
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            AutomatedDraw MainCamera = new AutomatedDraw(new Vector(Player.X, Player.Y), new Vector(0,0), Color.White, GameState == 1, 1);
+            AutomatedDraw MainCamera = new AutomatedDraw(new Vector(Player.X, Player.Y), new Vector(0,0), Color.White, GameState == 2, 1);
             MainCamera.draw(Player, PlayerTexture);
             MainCamera.draw(new Rectangle(0,0, 1000, 1000), PlayerTexture);
             MainCamera.draw(new Rectangle(-1500, -1500, 100, 100), PlayerTexture);
             // TODO: Add your drawing code here
+            button.ButtonUpdate(new Rectangle(300 , 300, 1000, 300), PlayerTexture, GameState == 1);
+            Color color = Color.White;
+            if (button.Pressed)
+            {
+                //GameState = 2;
+                color = Color.Red;
+            }
+            AutomatedDraw bases = new AutomatedDraw(new Vector(0, 0), color);
+            bases.draw(new Rectangle(XMousePos, YMousePos, 30, 40), PlayerTexture);
+            bases.draw(new Rectangle(300, 300, 1000, 300), PlayerTexture);
             base.Draw(gameTime);
         }
     }
