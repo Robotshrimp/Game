@@ -10,40 +10,26 @@ namespace GameJom
         static GraphicsDeviceManager graphics = Game1.graphics;
         static double ScreenSizeAdjustment = Game1.ScreenSizeAdjustment;
         static Rectangle screenBounds = Game1.ScreenBounds;
-        static Vector correctScreenSize = Game1.correctScreenSize;
+        static Vector CalculationScreenSize = Game1.calculationScreenSize;
         //constructor variables
 
+        Rectangle DisplayLocation;
         Vector Centering;
-        Vector UiOffset;
-        double Zoom;
         Color Color;
+        double zoom;
         bool Drawn;
         // constructor, this takes the camera properties as paramters
 
-        public AutomatedDraw(Vector centering, Color color, Vector uiOffset, bool drawn = true, double zoom = 1)
+        public AutomatedDraw(Rectangle displayLocation, Vector centering, Color color, bool drawn = true, double zoom = 1)
         {
             this.Centering = centering;
-            this.UiOffset = new Vector(uiOffset.X + screenBounds.X, uiOffset.Y + screenBounds.Y);
-            this.Zoom = zoom;
+            this.DisplayLocation = displayLocation;
             this.Color = color;
             this.Drawn = drawn;
+            this.zoom = zoom;
         }
-
-        // overloads for constructor
-
-        public AutomatedDraw(Color color, Vector uiOffset, bool drawn = true, double zoom = 1)
-            : this(new Vector(
-
-                //get's middle of screen
-
-                (correctScreenSize.X / 2), 
-                (correctScreenSize.Y / 2)), 
-                  
-                  color, uiOffset,  drawn, zoom) { 
-        }
-        public AutomatedDraw(bool drawn = true, double zoom = 1)
-            : this( Color.White,new Vector(0 ,0), drawn, zoom) { 
-        }
+        public AutomatedDraw(Rectangle displayLocation, Color color, bool drawn = true, double zoom = 1)
+            : this(displayLocation, new Vector((int)(displayLocation.Width / 2 / ScreenSizeAdjustment), (int)(displayLocation.Height / 2 / ScreenSizeAdjustment)), color, drawn, zoom) { }
 
         // the draw code that coombines individrual draw parameters and constructor parameters and draws the result
 
@@ -60,8 +46,8 @@ namespace GameJom
 
                 // code that stops drawing objects that are offscreen
 
-                if (!(Processed.Right < 0 || Processed.Left > graphics.PreferredBackBufferWidth
-                    || Processed.Bottom < 0 || Processed.Top > graphics.PreferredBackBufferHeight))
+                if (!(Processed.Right < DisplayLocation.Left || Processed.Left > DisplayLocation.Right
+                    || Processed.Bottom < DisplayLocation.Top || Processed.Top > DisplayLocation.Bottom))
                 {
                     spriteBatch.Begin();
                     spriteBatch.Draw(texture, Processed, usedTexture, color);
@@ -71,23 +57,26 @@ namespace GameJom
         }
         public Rectangle DisplayRectangle(Rectangle locationShape)
         {
+            Rectangle calculationRectangle = new Rectangle(
+                locationShape.X - Centering.X + (int)(DisplayLocation.Width / 2 / ScreenSizeAdjustment),
+                locationShape.Y - Centering.Y + (int)(DisplayLocation.Height / 2 / ScreenSizeAdjustment),
+                locationShape.Width,
+                locationShape.Height);
             return new Rectangle(
 
-                    (int)(((locationShape.X - Centering.X) * Zoom + UiOffset.X
-                    + (correctScreenSize.X / 2))
-                    * ScreenSizeAdjustment
+                    (int)(calculationRectangle.X
+                    * ScreenSizeAdjustment * zoom + DisplayLocation.X
                     ),
 
-                    (int)(((locationShape.Y- Centering.Y) * Zoom + UiOffset.Y
-                    + (correctScreenSize.Y / 2) )
-                    * ScreenSizeAdjustment
+                    (int)(calculationRectangle.Y 
+                    * ScreenSizeAdjustment * zoom + DisplayLocation.Y
                     ),
 
-                    (int)((locationShape.Width) * Zoom
-                    * ScreenSizeAdjustment
+                    (int)((calculationRectangle.Width)
+                    * ScreenSizeAdjustment * zoom
                     ),
-                    (int)((locationShape.Height) * Zoom
-                    * ScreenSizeAdjustment
+                    (int)((calculationRectangle.Height)
+                    * ScreenSizeAdjustment * zoom
                     ));
         }
         // overload

@@ -5,6 +5,8 @@ namespace GameJom
 {
     public class Button 
     {
+        Rectangle ScreenBounds = Game1.ScreenBounds;
+        Vector correctScreenSize = Game1.calculationScreenSize;
         static AutomatedDraw drawButton;
         public bool Pressed;
         public void ButtonUpdate(Rectangle button, Texture2D texture, bool loaded = true)
@@ -12,7 +14,7 @@ namespace GameJom
             if (loaded)
             {
                 Pressed = false;
-                drawButton = new AutomatedDraw();
+                drawButton = new AutomatedDraw(ScreenBounds, Color.White);
                 drawButton.draw(button, texture);
                 button = drawButton.DisplayRectangle(button);
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
