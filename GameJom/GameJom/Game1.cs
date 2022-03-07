@@ -12,8 +12,8 @@ namespace GameJom
         public static GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
         public static double ScreenSizeAdjustment = 1;
-        public static int XAdjustedScreen;
-        public static int YAdjustedScreen;
+        public static Rectangle ScreenBounds;
+        public static Vector correctScreenSize = new Vector();
         public static Button button = new Button();
         public static int GameState = 1;
         public static bool Paused = false;
@@ -45,10 +45,15 @@ namespace GameJom
             {
                 num = (double)graphics.PreferredBackBufferHeight / 2160;
             }
-            XAdjustedScreen = (int)(3840 * num);
-            YAdjustedScreen = (int)(2160 * num);
-        ScreenSizeAdjustment = num;
+            correctScreenSize.X = (int)(graphics.PreferredBackBufferWidth / num);
+            correctScreenSize.Y = (int)(graphics.PreferredBackBufferHeight / num);
+            ScreenBounds = new Rectangle(
+                (int)((correctScreenSize.X - 3840) / 2), 
+                (int)((correctScreenSize.Y - 2160) / 2), 
+                3840, 2160);
+            ScreenSizeAdjustment = num;
             graphics.ApplyChanges();
+            this.IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -83,8 +88,8 @@ namespace GameJom
         protected override void Update(GameTime gameTime)
         {
             mouseState = Mouse.GetState();
-            XMousePos = mouseState.X;
-            YMousePos = mouseState.Y;
+            XMousePos = (int)(mouseState.X / ScreenSizeAdjustment);
+            YMousePos = (int)(mouseState.Y / ScreenSizeAdjustment);
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -107,8 +112,8 @@ namespace GameJom
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
-            AutomatedDraw MainCamera = new AutomatedDraw(new Vector(Player.X, Player.Y), new Vector(0,0), Color.White, GameState == 2, 1);
+            GraphicsDevice.Clear(Color.Gray);
+            AutomatedDraw MainCamera = new AutomatedDraw(new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2),  Color.White, new Vector(0, -ScreenBounds.Y), GameState == 2, 1);
             MainCamera.draw(Player, PlayerTexture);
             MainCamera.draw(new Rectangle(0,0, 1000, 1000), PlayerTexture);
             MainCamera.draw(new Rectangle(-1500, -1500, 100, 100), PlayerTexture);
@@ -117,12 +122,19 @@ namespace GameJom
             Color color = Color.White;
             if (button.Pressed)
             {
-                //GameState = 2;
+                GameState = 2;
                 color = Color.Red;
             }
-            AutomatedDraw bases = new AutomatedDraw(new Vector(0, 0), color);
-            bases.draw(new Rectangle(XMousePos, YMousePos, 30, 40), PlayerTexture);
-            bases.draw(new Rectangle(300, 300, 1000, 300), PlayerTexture);
+            AutomatedDraw Base = new AutomatedDraw(color, new Vector(0,0));
+
+            AutomatedDraw unprocessed = new AutomatedDraw(Color.Black, new Vector(- ScreenBounds.X, - ScreenBounds.Y));
+
+            unprocessed.draw(new Rectangle(XMousePos, YMousePos, 30, 40), PlayerTexture, Color.White);
+            unprocessed.draw(new Rectangle(0, 0, correctScreenSize.X, ScreenBounds.Top), PlayerTexture);
+            unprocessed.draw(new Rectangle(0, ScreenBounds.Bottom, correctScreenSize.X, ScreenBounds.Top), PlayerTexture);
+
+            
+            //Base.draw(new Rectangle(300, 300, 1000, 300), PlayerTexture);
             base.Draw(gameTime);
         }
     }
