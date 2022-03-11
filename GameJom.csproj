@@ -41,10 +41,12 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="classes\Better Vector.cs" />
+    <Compile Include="Foundational Classes\Better Vector.cs" />
     <Compile Include="classes\Button.cs" />
     <Compile Include="classes\Animation Manager.cs" />
     <Compile Include="classes\Draw.cs" />
+    <Compile Include="classes\Paralax.cs" />
+    <Compile Include="Foundational Classes\Load Content.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

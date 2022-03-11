@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameJom
 {
-    class AnimationManager
+    class AnimationManager 
     {
 
         Texture2D SpriteSheet;

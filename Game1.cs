@@ -12,9 +12,8 @@ namespace GameJom
         public static GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
         public static double ScreenSizeAdjustment = 1;
-        public static Rectangle ScreenBounds;
         public static Vector calculationScreenSize = new Vector(3840, 2160);
-        public static Button button = new Button();
+        public static Rectangle ScreenBounds;
         public static int GameState = 1;
         public static bool Paused = false;
         public static MouseState mouseState;
@@ -89,8 +88,6 @@ namespace GameJom
         protected override void Update(GameTime gameTime)
         {
             mouseState = Mouse.GetState();
-            XMousePos = (int)(mouseState.X);
-            YMousePos = (int)(mouseState.Y);
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -105,6 +102,9 @@ namespace GameJom
                 Player.X += 10;
 
             base.Update(gameTime);
+
+
+            base.Draw(gameTime);
         }
 
         /// <summary>
@@ -114,27 +114,30 @@ namespace GameJom
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Gray);
-            AutomatedDraw MainCamera = new AutomatedDraw(ScreenBounds,new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2),  Color.White, GameState == 2);
+            AutomatedDraw MainCamera = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2),  Color.White, GameState == 2);
             MainCamera.draw(Player, PlayerTexture);
             MainCamera.draw(new Rectangle(0,0, 1000, 1000), PlayerTexture);
             MainCamera.draw(new Rectangle(-1500, -1500, 100, 100), PlayerTexture);
-            // TODO: Add your drawing code here
-            button.ButtonUpdate(new Rectangle(300 , 300, 1000, 300), PlayerTexture, GameState == 1);
-            Color color = Color.White;
+            AutomatedDraw paralaxDraw = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2), Color.Green, GameState == 2, 0.5);
+            paralaxDraw.draw(new Rectangle(0, 0, 1000, 1000), PlayerTexture);
+            
+            AutomatedDraw Base = new AutomatedDraw(ScreenBounds, Color.White);
+
+            Button button = new Button(Base, GameState == 1);
+            button.ButtonUpdate(new Rectangle(300 , 300, 1000, 300), PlayerTexture);
             if (button.Pressed)
             {
                 GameState = 2;
-                color = Color.Red;
             }
-            AutomatedDraw Base = new AutomatedDraw(ScreenBounds, new Vector(ScreenBounds.Width / 2, ScreenBounds.Height / 2), color);
+
+
 
             AutomatedDraw unprocessed = new AutomatedDraw(new Rectangle(0,0,graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.Black, true, (double)1/ScreenSizeAdjustment);
 
-            unprocessed.draw(new Rectangle(XMousePos, YMousePos, 30, 40), PlayerTexture, Color.White);
+            unprocessed.draw(new Rectangle(mouseState.X, mouseState.Y, 30, 40), PlayerTexture, Color.White);
             unprocessed.draw(new Rectangle(0, 0, calculationScreenSize.X, ScreenBounds.Top), PlayerTexture);
             unprocessed.draw(new Rectangle(0, ScreenBounds.Bottom, calculationScreenSize.X, ScreenBounds.Top), PlayerTexture);
 
-            
             //Base.draw(new Rectangle(300, 300, 1000, 300), PlayerTexture);
             base.Draw(gameTime);
         }

@@ -3,13 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameJom
 {
-    class AutomatedDraw
+    public class AutomatedDraw
     {
 
         static SpriteBatch spriteBatch = Game1.spriteBatch;
         static GraphicsDeviceManager graphics = Game1.graphics;
         static double ScreenSizeAdjustment = Game1.ScreenSizeAdjustment;
-        static Rectangle screenBounds = Game1.ScreenBounds;
         static Vector CalculationScreenSize = Game1.calculationScreenSize;
         //constructor variables
 
@@ -29,7 +28,12 @@ namespace GameJom
             this.zoom = zoom;
         }
         public AutomatedDraw(Rectangle displayLocation, Color color, bool drawn = true, double zoom = 1)
-            : this(displayLocation, new Vector((int)(displayLocation.Width / 2 / ScreenSizeAdjustment), (int)(displayLocation.Height / 2 / ScreenSizeAdjustment)), color, drawn, zoom) { }
+            : this(displayLocation, 
+                  
+                  //this code gets 3840 / 2 and 2160 / 2
+                  new Vector((int)(displayLocation.Width / 2 / ScreenSizeAdjustment), (int)(displayLocation.Height / 2 / ScreenSizeAdjustment)), 
+                  
+                  color, drawn, zoom) { }
 
         // the draw code that coombines individrual draw parameters and constructor parameters and draws the result
 
@@ -37,8 +41,6 @@ namespace GameJom
         {
             if (Drawn)
             {
-
-
 
                 // the size, shape, and location of the object on the screen
 
@@ -58,18 +60,18 @@ namespace GameJom
         public Rectangle DisplayRectangle(Rectangle locationShape)
         {
             Rectangle calculationRectangle = new Rectangle(
-                locationShape.X - Centering.X + (int)(DisplayLocation.Width / 2 / ScreenSizeAdjustment),
-                locationShape.Y - Centering.Y + (int)(DisplayLocation.Height / 2 / ScreenSizeAdjustment),
+                locationShape.X - Centering.X,
+                locationShape.Y - Centering.Y,
                 locationShape.Width,
                 locationShape.Height);
             return new Rectangle(
 
-                    (int)(calculationRectangle.X
-                    * ScreenSizeAdjustment * zoom + DisplayLocation.X
+                    (int)((calculationRectangle.X
+                    * ScreenSizeAdjustment + DisplayLocation.Width / 2) * zoom + DisplayLocation.X 
                     ),
 
-                    (int)(calculationRectangle.Y 
-                    * ScreenSizeAdjustment * zoom + DisplayLocation.Y
+                    (int)((calculationRectangle.Y 
+                    * ScreenSizeAdjustment + DisplayLocation.Height / 2) * zoom + DisplayLocation.Y
                     ),
 
                     (int)((calculationRectangle.Width)

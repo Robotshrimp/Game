@@ -5,16 +5,29 @@ namespace GameJom
 {
     public class Button 
     {
-        Rectangle ScreenBounds = Game1.ScreenBounds;
-        Vector correctScreenSize = Game1.calculationScreenSize;
-        static AutomatedDraw drawButton;
+
+        static Vector correctScreenSize = Game1.calculationScreenSize;
+
+        AutomatedDraw drawButton;
+
         public bool Pressed;
-        public void ButtonUpdate(Rectangle button, Texture2D texture, bool loaded = true)
+
+        public bool Hovered;
+
+        public bool Loaded;
+
+        public Button(AutomatedDraw drawParameters, bool loaded = true)
         {
-            if (loaded)
+            this.drawButton = drawParameters;
+
+            this.Loaded = loaded;
+        }
+
+        public void ButtonUpdate(Rectangle button, Texture2D texture)
+        {
+            if (Loaded)
             {
                 Pressed = false;
-                drawButton = new AutomatedDraw(ScreenBounds, Color.White);
                 drawButton.draw(button, texture);
                 button = drawButton.DisplayRectangle(button);
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -30,5 +43,6 @@ namespace GameJom
                 }
             }
         }
+
     }
 }
