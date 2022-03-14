@@ -19,6 +19,7 @@ namespace GameJom
         public static MouseState mouseState;
         int XMousePos;
         int YMousePos;
+        Parallax parallax = new Parallax();
         Texture2D PlayerTexture;
         Rectangle Player = new Rectangle(0, 0, 96, 96);
         public Game1()
@@ -114,12 +115,12 @@ namespace GameJom
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Gray);
-            AutomatedDraw MainCamera = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2),  Color.White, GameState == 2);
-            MainCamera.draw(Player, PlayerTexture);
+            AutomatedDraw MainCamera = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2),  Color.White, GameState == 2, parallax.ParallaxZoom(10));
             MainCamera.draw(new Rectangle(0,0, 1000, 1000), PlayerTexture);
             MainCamera.draw(new Rectangle(-1500, -1500, 100, 100), PlayerTexture);
-            AutomatedDraw paralaxDraw = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2), Color.Green, GameState == 2, 0.5);
+            AutomatedDraw paralaxDraw = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2), Color.DarkGray, GameState == 2, parallax.ParallaxZoom(20));
             paralaxDraw.draw(new Rectangle(0, 0, 1000, 1000), PlayerTexture);
+            MainCamera.draw(Player, PlayerTexture);
             
             AutomatedDraw Base = new AutomatedDraw(ScreenBounds, Color.White);
 
@@ -130,14 +131,11 @@ namespace GameJom
                 GameState = 2;
             }
 
-
-
-            AutomatedDraw unprocessed = new AutomatedDraw(new Rectangle(0,0,graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.Black, true, (double)1/ScreenSizeAdjustment);
-
-            unprocessed.draw(new Rectangle(mouseState.X, mouseState.Y, 30, 40), PlayerTexture, Color.White);
-            unprocessed.draw(new Rectangle(0, 0, calculationScreenSize.X, ScreenBounds.Top), PlayerTexture);
-            unprocessed.draw(new Rectangle(0, ScreenBounds.Bottom, calculationScreenSize.X, ScreenBounds.Top), PlayerTexture);
-
+            spriteBatch.Begin();
+            spriteBatch.Draw(PlayerTexture, new Rectangle(mouseState.X, mouseState.Y, 30, 40), Color.White);
+            spriteBatch.Draw(PlayerTexture, new Rectangle(0, 0, calculationScreenSize.X, ScreenBounds.Top), Color.White);
+            spriteBatch.Draw(PlayerTexture, new Rectangle(0, ScreenBounds.Bottom, calculationScreenSize.X, ScreenBounds.Top), Color.White);
+            spriteBatch.End();
             //Base.draw(new Rectangle(300, 300, 1000, 300), PlayerTexture);
             base.Draw(gameTime);
         }

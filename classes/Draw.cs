@@ -15,7 +15,7 @@ namespace GameJom
         Rectangle DisplayLocation;
         Vector Centering;
         Color Color;
-        double zoom;
+        public double Zoom;
         bool Drawn;
         // constructor, this takes the camera properties as paramters
 
@@ -25,7 +25,7 @@ namespace GameJom
             this.DisplayLocation = displayLocation;
             this.Color = color;
             this.Drawn = drawn;
-            this.zoom = zoom;
+            this.Zoom = zoom;
         }
         public AutomatedDraw(Rectangle displayLocation, Color color, bool drawn = true, double zoom = 1)
             : this(displayLocation, 
@@ -67,18 +67,18 @@ namespace GameJom
             return new Rectangle(
 
                     (int)((calculationRectangle.X
-                    * ScreenSizeAdjustment + DisplayLocation.Width / 2) * zoom + DisplayLocation.X 
+                    * ScreenSizeAdjustment * Zoom + DisplayLocation.Width / 2) + DisplayLocation.X 
                     ),
 
                     (int)((calculationRectangle.Y 
-                    * ScreenSizeAdjustment + DisplayLocation.Height / 2) * zoom + DisplayLocation.Y
+                    * ScreenSizeAdjustment * Zoom + DisplayLocation.Height / 2) + DisplayLocation.Y
                     ),
 
                     (int)((calculationRectangle.Width)
-                    * ScreenSizeAdjustment * zoom
+                    * ScreenSizeAdjustment * Zoom
                     ),
                     (int)((calculationRectangle.Height)
-                    * ScreenSizeAdjustment * zoom
+                    * ScreenSizeAdjustment * Zoom
                     ));
         }
         // overload

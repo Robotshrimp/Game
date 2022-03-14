@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameJom.classes
+namespace GameJom
 {
-    class Paralax
+    public class Parallax
     {
-        int BaseDepth;
-        public Paralax(int baseDepth)
+        static int BaseDepth = 10;
+        public double ParallaxZoom(int Depth)
         {
-            this.BaseDepth = baseDepth;
+            return (double)BaseDepth / Depth;
         }
     }
 }
