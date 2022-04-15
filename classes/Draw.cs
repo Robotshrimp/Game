@@ -79,7 +79,18 @@ namespace GameJom
                     ),
                     (int)((calculationRectangle.Height)
                     * ScreenSizeAdjustment * Zoom
+
                     ));
+        }
+        public Rectangle CalculationRectangle(Rectangle displayShape)
+        {
+            return new Rectangle(
+                (int)((displayShape.X - DisplayLocation.X - DisplayLocation.Width / 2) / (ScreenSizeAdjustment * Zoom)) + Centering.X,
+                (int)((displayShape.Y - DisplayLocation.Y - DisplayLocation.Height / 2) / (ScreenSizeAdjustment * Zoom)) + Centering.Y,
+                (int)(displayShape.Width / (ScreenSizeAdjustment * Zoom)),
+                (int)(displayShape.Height / (ScreenSizeAdjustment * Zoom))
+                );
+
         }
         // overload
         public void draw(Rectangle locationShape, Texture2D texture, Color color)
