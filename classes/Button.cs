@@ -10,7 +10,8 @@ namespace GameJom
 
         AutomatedDraw drawButton;
 
-        public bool Pressed;
+        public bool PressedLeft;
+        public bool PressedRight;
 
         public bool Hovered;
 
@@ -27,20 +28,27 @@ namespace GameJom
         {
             if (Loaded)
             {
-                Pressed = false;
+                PressedLeft = false;
+                PressedRight = false;
                 drawButton.draw(button, texture);
                 button = drawButton.DisplayRectangle(button);
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                {
 
-                    if (Mouse.GetState().X < button.Right &&
-                        Mouse.GetState().X > button.Left &&
-                        Mouse.GetState().Y < button.Bottom &&
-                        Mouse.GetState().Y > button.Top)
+                if (Mouse.GetState().X < button.Right &&
+                    Mouse.GetState().X > button.Left &&
+                    Mouse.GetState().Y < button.Bottom &&
+                    Mouse.GetState().Y > button.Top)
+                {
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                     {
-                        Pressed = true;
+
+                        PressedLeft = true;
+                    }
+                    if (Mouse.GetState().RightButton == ButtonState.Pressed)
+                    {
+                        PressedRight = true;
                     }
                 }
+                
             }
         }
 

@@ -10,7 +10,7 @@ namespace GameJom
     {
         public int X;
         public int Y;
-        public Vector(int x, int y)
+        public Vector(int x = 0, int y = 0)
         {
             this.X = x;
             this.Y = y;

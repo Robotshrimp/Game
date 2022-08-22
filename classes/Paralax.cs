@@ -8,8 +8,8 @@ namespace GameJom
 {
     public class Parallax
     {
-        static int BaseDepth = 10;
-        public double ParallaxZoom(int Depth)
+        const int BaseDepth = 10;
+        public static double ParallaxZoom(int Depth)
         {
             return (double)BaseDepth / Depth;
         }

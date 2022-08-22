@@ -9,37 +9,54 @@ using System.Threading.Tasks;
 
 namespace GameJom
 {
-    class LevelEditor
+    class TileMap
     {
         static MouseState mouseState = Game1.mouseState;
-
-        static List<List<List<int>>> UsedTileMaps;
-        static List<List<int>> TileMapSize;
-        static bool Drawn = false;
-        static double Zoom = 1;
         static Texture2D SelectTexture;
-        static AutomatedDraw LevelGraphics = new AutomatedDraw(Game1.ScreenBounds, Color.White, Drawn, Zoom);
         static Vector TileSize = new Vector(96, 96);
-        List<List<int>> TileMap;
-        int ChangeTo;
+        static float Zoom = 1;
         int LayerSerialNum;
+        AutomatedDraw Graphics;
+        int ChangeTo;
+        List<List<int>> BaseTileMap;
+        public TileMap(bool Drawn)
+        {
 
-        public LevelEditor(List<List<int>> tileMap)
-        { this.TileMap = tileMap; }
-        public LevelEditor() : this(TileMapSize) { }
-
+            Graphics = new AutomatedDraw(Game1.ScreenBounds, Color.White, Drawn, Zoom);
+        }
         public void Update()
         {
-            Rectangle mouselocation = LevelGraphics.CalculationRectangle(new Rectangle(mouseState.X, mouseState.Y, 0, 0));
+            Rectangle mouselocation = Graphics.CalculationRectangle(new Rectangle(mouseState.X, mouseState.Y, 0, 0));
             Vector selectedTile = new Vector((int)(mouselocation.X / TileSize.X), (int)(mouselocation.Y / TileSize.Y));
             Rectangle currentTile = new Rectangle(selectedTile.X * TileSize.X, selectedTile.Y * TileSize.Y, TileSize.X, TileSize.Y);
 
-            Button Tile = new Button(LevelGraphics, Drawn);
+            Button Tile = new Button(Graphics, Graphics.Drawn);
             Tile.ButtonUpdate(currentTile, SelectTexture);
-            if (Tile.Pressed)
+            if (Tile.PressedLeft)
             {
-                TileMap[selectedTile.X][selectedTile.Y] = ChangeTo;
+                BaseTileMap[selectedTile.X][selectedTile.Y] = ChangeTo;
             }
         }
+    }
+    class LevelEditor
+    {
+        static AutomatedDraw LevelGraphics;
+        Vector TileMapSize;
+
+        public LevelEditor(Vector tileMap)
+        { TileMapSize = tileMap; }
+        public LevelEditor() : this(new Vector(10, 10)) { }
+
+        static public void Save()
+        {
+
+        }
+
+        static public void Load()
+        {
+
+        }
+
+
     }
 }
