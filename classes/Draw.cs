@@ -16,7 +16,7 @@ namespace GameJom
         Vector Centering;
         Color Color;
         public double Zoom;
-        bool Drawn;
+        public bool Drawn;
         // constructor, this takes the camera properties as paramters
 
         public AutomatedDraw(Rectangle displayLocation, Vector centering, Color color, bool drawn = true, double zoom = 1)
@@ -57,6 +57,16 @@ namespace GameJom
                 }
             }
         }
+        // overload
+        public void draw(Rectangle locationShape, Texture2D texture, Color color)
+        {
+            draw(locationShape, texture, new Rectangle(0, 0, texture.Width, texture.Height), color);
+        }
+        public void draw(Rectangle locationShape, Texture2D texture)
+        {
+            draw(locationShape, texture, Color);
+        }
+
         public Rectangle DisplayRectangle(Rectangle locationShape)
         {
             Rectangle calculationRectangle = new Rectangle(
@@ -82,6 +92,9 @@ namespace GameJom
 
                     ));
         }
+
+        //for calculating where Calculation Rechtangle would be for the given
+
         public Rectangle CalculationRectangle(Rectangle displayShape)
         {
             return new Rectangle(
@@ -91,15 +104,6 @@ namespace GameJom
                 (int)(displayShape.Height / (ScreenSizeAdjustment * Zoom))
                 );
 
-        }
-        // overload
-        public void draw(Rectangle locationShape, Texture2D texture, Color color)
-        {
-            draw(locationShape, texture, new Rectangle(0, 0, texture.Width, texture.Height), color);
-        }
-        public void draw(Rectangle locationShape, Texture2D texture)
-        {
-            draw(locationShape, texture, Color);
         }
     }
 }

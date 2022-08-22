@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using System.Collections.Generic;
+using System;
+
 namespace GameJom
 {
     /// <summary>
@@ -19,8 +22,7 @@ namespace GameJom
         public static MouseState mouseState;
         int XMousePos;
         int YMousePos;
-        Parallax parallax = new Parallax();
-        Texture2D PlayerTexture;
+        public static Texture2D BasicTexture;
         Rectangle Player = new Rectangle(0, 0, 96, 96);
         public Game1()
         {
@@ -66,7 +68,7 @@ namespace GameJom
         {
             // Create a new SpriteBatch, which can be used to draw textures.
 
-            PlayerTexture = Content.Load<Texture2D>("BasicShape");
+            BasicTexture = Content.Load<Texture2D>("BasicShape");
             spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
@@ -101,7 +103,7 @@ namespace GameJom
                 Player.X -= 10;
             if (Keyboard.GetState().IsKeyDown(Keys.D))
                 Player.X += 10;
-
+            LinearAlgebruh.MatrixTransform(new float[,] { { 0, 1 }, { 1, 0 } }, new float[] { 1, 0 });
             base.Update(gameTime);
 
 
@@ -115,27 +117,77 @@ namespace GameJom
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Gray);
-            AutomatedDraw MainCamera = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2),  Color.White, GameState == 2, parallax.ParallaxZoom(10));
-            MainCamera.draw(new Rectangle(0,0, 1000, 1000), PlayerTexture);
-            MainCamera.draw(new Rectangle(-1500, -1500, 100, 100), PlayerTexture);
-            AutomatedDraw paralaxDraw = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2), Color.DarkGray, GameState == 2, parallax.ParallaxZoom(20));
-            paralaxDraw.draw(new Rectangle(0, 0, 1000, 1000), PlayerTexture);
-            MainCamera.draw(Player, PlayerTexture);
+            if (GameState == 2)
+            {
+                GraphicsDevice.Clear(Color.Black);
+            }
+
+            AutomatedDraw MaiCamera = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2), Color.Red, GameState == 2, Parallax.ParallaxZoom(40));
+            MaiCamera.draw(new Rectangle(0, 0, 1000, 1000), BasicTexture);
+            AutomatedDraw paralxDraw = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2), Color.White, GameState == 2, Parallax.ParallaxZoom(30));
+            paralxDraw.draw(new Rectangle(-1000, 0, 1000, 1000), BasicTexture);
+            paralxDraw.draw(new Rectangle(1000, 0, 1000, 1000), BasicTexture, Color.Purple);
+            AutomatedDraw paralaxDraw = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2), Color.Lime, GameState == 2, Parallax.ParallaxZoom(20));
+            paralaxDraw.draw(new Rectangle(0, 0, 1000, 1000), BasicTexture);
+            AutomatedDraw MainCamera = new AutomatedDraw(ScreenBounds, new Vector(Player.X + Player.Width / 2, Player.Y + Player.Height / 2),  Color.Yellow, GameState == 2, Parallax.ParallaxZoom(10));
+            MainCamera.draw(new Rectangle(0,0, 1000, 1000), BasicTexture);
+            MainCamera.draw(new Rectangle(-1500, -1500, 100, 100), BasicTexture);
+            MainCamera.draw(Player, BasicTexture, Color.Blue);
             
             AutomatedDraw Base = new AutomatedDraw(ScreenBounds, Color.White);
 
             Button button = new Button(Base, GameState == 1);
-            button.ButtonUpdate(new Rectangle(300 , 300, 1000, 300), PlayerTexture);
-            if (button.Pressed)
+            button.ButtonUpdate(new Rectangle(300 , 300, 1000, 300), BasicTexture);
+            if (button.PressedLeft)
             {
                 GameState = 2;
             }
-
+            
             spriteBatch.Begin();
-            spriteBatch.Draw(PlayerTexture, new Rectangle(mouseState.X, mouseState.Y, 30, 40), Color.White);
-            spriteBatch.Draw(PlayerTexture, new Rectangle(0, 0, calculationScreenSize.X, ScreenBounds.Top), Color.White);
-            spriteBatch.Draw(PlayerTexture, new Rectangle(0, ScreenBounds.Bottom, calculationScreenSize.X, ScreenBounds.Top), Color.White);
+            spriteBatch.Draw(BasicTexture, new Rectangle(mouseState.X, mouseState.Y, 30, 40), Color.White);
+            spriteBatch.Draw(BasicTexture, new Rectangle(0, 0, calculationScreenSize.X, ScreenBounds.Top), Color.Black);
+            spriteBatch.Draw(BasicTexture, new Rectangle(0, ScreenBounds.Bottom, calculationScreenSize.X, ScreenBounds.Top), Color.Black);
+            //spriteBatch.Draw(BasicTexture, new Rectangle(2000, 2000, 50, 50), Color.Black);
             spriteBatch.End();
+            _3D_Because_Why_Not._3D_Renderer _3DEngine = new _3D_Because_Why_Not._3D_Renderer(360);
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                _3DEngine.UpdateLocation(new Vector3(-1, 0, 0));
+                _3DEngine.UpdateDirection(new Vector2(0.02f, 0));
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                _3DEngine.UpdateLocation(new Vector3(1, 0, 0));
+                _3DEngine.UpdateDirection(new Vector2(-0.02f, 0));
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                _3DEngine.UpdateLocation(new Vector3(0, -1, 0));
+                _3DEngine.UpdateDirection(new Vector2(0, 0.02f));
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                _3DEngine.UpdateLocation(new Vector3(0, 1, 0));
+                _3DEngine.UpdateDirection(new Vector2(0, -0.02f));
+            int depth = 10;
+            int depth2 = 12;
+            Vector3 corner1_1 = new Vector3(1, 1, depth);
+            Vector3 corner1_2 = new Vector3(-3, 1, depth);
+            Vector3 corner1_3 = new Vector3(-1, -1, depth);
+            Vector3 corner1_4 = new Vector3(1, -1, depth);
+            Vector3 corner2_1 = new Vector3(1, 1, depth2);
+            Vector3 corner2_2 = new Vector3(-1, 1, depth2);
+            Vector3 corner2_3 = new Vector3(-1, -1, depth2);
+            Vector3 corner2_4 = new Vector3(3, -1, depth2);
+            _3DEngine.renderLine(corner1_1, corner2_1, 3).DrawLine();
+            _3DEngine.renderLine(corner1_2, corner2_2, 3).DrawLine();
+            _3DEngine.renderLine(corner1_4, corner2_4, 3).DrawLine();
+            _3DEngine.renderLine(corner1_3, corner2_3, 3).DrawLine();
+
+            _3DEngine.renderLine(corner1_1, corner1_2, 3).DrawLine();
+            _3DEngine.renderLine(corner1_1, corner1_4, 3).DrawLine();
+            _3DEngine.renderLine(corner1_3, corner1_2, 3).DrawLine();
+            _3DEngine.renderLine(corner1_3, corner1_4, 3).DrawLine();
+
+            _3DEngine.renderLine(corner2_1, corner2_2, 3).DrawLine();
+            _3DEngine.renderLine(corner2_1, corner2_4, 3).DrawLine();
+            _3DEngine.renderLine(corner2_3, corner2_2, 3).DrawLine();
+            _3DEngine.renderLine(corner2_3, corner2_4, 3).DrawLine();
+            //LineClass linedraw = new LineClass(new Vector(2000, 2000), new Vector(100, 100), 3);
+            //linedraw.DrawLine();
             //Base.draw(new Rectangle(300, 300, 1000, 300), PlayerTexture);
             base.Draw(gameTime);
         }

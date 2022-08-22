@@ -5,8 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameJom
 {
-    class AnimationManager : AutomatedDraw
+    class AnimationManager
     {
+
         Texture2D SpriteSheet;
         int TotalFrames;
         int CurrentFrame;
@@ -15,7 +16,7 @@ namespace GameJom
         {
             this.TotalFrames = totalFrames;
             
-            this.SpriteSheet = Content.Load<Texture2D>(spriteSheet);
+            //this.SpriteSheet = Content.Load<Texture2D>(spriteSheet);
         }
         public void LoopAnimation(int animation)
         {
@@ -40,7 +41,7 @@ namespace GameJom
 
         public void Animate(AutomatedDraw drawConstructor)
         {
-            drawConstructor.draw(FrameSize, SpriteSheet, new Rectangle(FrameSize.Right * CurrentFrame + 1, FrameSize.Top, FrameSize.Width, FrameSize.Height));
+            drawConstructor.draw(FrameSize, SpriteSheet, new Rectangle(FrameSize.Right * CurrentFrame + 1, FrameSize.Top, FrameSize.Width, FrameSize.Height), Color.White);
         }
     }
 }
