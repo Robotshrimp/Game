@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 namespace GameJom
 {
-    public class Button 
+    public class Button : Game1
     {
         static AutomatedDraw drawButton;
         public bool Pressed;
@@ -11,21 +11,22 @@ namespace GameJom
         {
             if (loaded)
             {
-                Pressed = false;
-                drawButton = new AutomatedDraw();
+                drawButton = new AutomatedDraw(loaded);
                 drawButton.draw(button, texture);
-                button = drawButton.DisplayRectangle(button);
-                if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                MouseState mouseState = Mouse.GetState();
+                int x = mouseState.X;
+                int y = mouseState.Y;
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-
-                    if (Mouse.GetState().X < button.Right &&
-                        Mouse.GetState().X > button.Left &&
-                        Mouse.GetState().Y < button.Bottom &&
-                        Mouse.GetState().Y > button.Top)
+                    if (mouseState.X < button.Right &&
+                        mouseState.X > button.Left &&
+                        mouseState.Y < button.Bottom &&
+                        mouseState.Y > button.Top)
                     {
                         Pressed = true;
                     }
                 }
+                Pressed = false;
             }
         }
     }
