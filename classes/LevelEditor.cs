@@ -13,7 +13,7 @@ namespace GameJom
     {
         static MouseState mouseState = Game1.mouseState;
         static Texture2D SelectTexture;
-        static Vector TileSize = new Vector(96, 96);
+        static Point TileSize = new Point(96, 96);
         static float Zoom = 1;
         int LayerSerialNum;
         AutomatedDraw Graphics;
@@ -26,13 +26,13 @@ namespace GameJom
         }
         public void Update()
         {
-            Rectangle mouselocation = Graphics.CalculationRectangle(new Rectangle(mouseState.X, mouseState.Y, 0, 0));
-            Vector selectedTile = new Vector((int)(mouselocation.X / TileSize.X), (int)(mouselocation.Y / TileSize.Y));
+            Rectangle mouselocation = Graphics.DisplayToCalculation(new Rectangle(mouseState.X, mouseState.Y, 0, 0));
+            Point selectedTile = new Point((int)(mouselocation.X / TileSize.X), (int)(mouselocation.Y / TileSize.Y));
             Rectangle currentTile = new Rectangle(selectedTile.X * TileSize.X, selectedTile.Y * TileSize.Y, TileSize.X, TileSize.Y);
 
-            Button Tile = new Button(Graphics, Graphics.Drawn);
-            Tile.ButtonUpdate(currentTile, SelectTexture);
-            if (Tile.PressedLeft)
+            Button Tile = new Button(Graphics, currentTile, Graphics.Drawn);
+            Tile.ButtonUpdate(SelectTexture);
+            if (Tile.pressedLeft)
             {
                 BaseTileMap[selectedTile.X][selectedTile.Y] = ChangeTo;
             }
@@ -41,11 +41,11 @@ namespace GameJom
     class LevelEditor
     {
         static AutomatedDraw LevelGraphics;
-        Vector TileMapSize;
+        Point TileMapSize;
 
-        public LevelEditor(Vector tileMap)
+        public LevelEditor(Point tileMap)
         { TileMapSize = tileMap; }
-        public LevelEditor() : this(new Vector(10, 10)) { }
+        public LevelEditor() : this(new Point(10, 10)) { }
 
         static public void Save()
         {

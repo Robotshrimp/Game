@@ -8,20 +8,26 @@ namespace GameJom
     class LineClass
     {
         static SpriteBatch spriteBatch = Game1.spriteBatch;
-        public Vector start;
-        public Vector end;
-        int thiccness;
-        public LineClass(Vector Start, Vector End, int Thiccness = 1)
+        public Point start { get; private set; }
+        public Point end { get; private set; }
+        public int thiccness;
+        public LineClass(Point Start, Point End, int Thiccness = 1)
         {
             this.thiccness = Thiccness;
             this.start = Start;
             this.end = End;
         }
-        public void DrawLine(int OffsetX = 0, int OffsetY = 0)
+        public void setStart(Point newStart)
         {
-            Vector adjStart = new Vector(start.X + OffsetX, start.Y + OffsetY);
-            Vector adjEnd = new Vector(end.X + OffsetX, end.Y + OffsetY);
-            Vector RelativePostition = new Vector(adjEnd.X - adjStart.X, adjEnd.Y - adjStart.Y); 
+            this.start = newStart;
+        }
+        public void setEnd(Point newEnd)
+        {
+            this.end = newEnd;
+        }
+        public void DrawLine()
+        {
+            Point RelativePostition = new Point(end.X - start.X, end.Y - start.Y);
             int length = (int)TrigFun.pythag_hypotenus(RelativePostition);// pythagorean theorem hypotenus moment
 
             // angle finder, might be useful to put in another class
@@ -32,7 +38,7 @@ namespace GameJom
             }
             // might be useful to have specific function for draw
             spriteBatch.Begin();
-            spriteBatch.Draw(Game1.BasicTexture, null, new Rectangle(adjStart.X, adjStart.Y, length, thiccness), null, new Vector2(0, 0), rotation, null, Color.White);
+            spriteBatch.Draw(Game1.BasicTexture, null, new Rectangle(start.X, start.Y, length, thiccness), null, new Vector2(0, 0), rotation, null, Color.Black);
             spriteBatch.End();
         }
     }

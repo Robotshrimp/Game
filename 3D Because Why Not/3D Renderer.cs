@@ -67,13 +67,13 @@ namespace GameJom._3D_Because_Why_Not
                 CameraDirection.Y += (float)(2 * Math.PI);
             }
         }
-        private Vector ScreenProjection(Vector2 Angle)
+        private Point ScreenProjection(Vector2 Angle)
         {
             float radFOVX = ((float)fovHorizontal / 360) * (float)Math.PI;
             float radFOVY = ((float)fovVertical / 360) * (float)Math.PI;
-            Vector screenOffset = new Vector(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2); // sets 0,0 to center of screen
-            Vector projectionLocation = new Vector((int)(screenOffset.X * (Angle.X / radFOVX)), (int)(screenOffset.Y * (Angle.Y / radFOVY))); // gives angle coordinates an x,y coornet scaled with fov. screen offset is used because i'm a lazy bastard who is too lazy to get the value straight from the source, it has no computational value and probably weakens the code
-            return new Vector(projectionLocation.X + screenOffset.X, -projectionLocation.Y + screenOffset.Y);// screen offset is applied to center around middle of screen
+            Point screenOffset = new Point(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2); // sets 0,0 to center of screen
+            Point projectionLocation = new Point((int)(screenOffset.X * (Angle.X / radFOVX)), (int)(screenOffset.Y * (Angle.Y / radFOVY))); // gives angle coordinates an x,y coornet scaled with fov. screen offset is used because i'm a lazy bastard who is too lazy to get the value straight from the source, it has no computational value and probably weakens the code
+            return new Microsoft.Xna.Framework.Point(projectionLocation.X + screenOffset.X, -projectionLocation.Y + screenOffset.Y);// screen offset is applied to center around middle of screen
         }
         public Vector2 CoordnetConvert(Vector3 coordnetLocation)
         {

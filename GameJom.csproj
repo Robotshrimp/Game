@@ -41,10 +41,21 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="classes\Better Vector.cs" />
-    <Compile Include="classes\Button.cs" />
+    <Compile Include="3D Because Why Not\3D Object.cs" />
+    <Compile Include="3D Because Why Not\3D Renderer.cs" />
+    <Compile Include="3D Because Why Not\Triangle.cs" />
+    <Compile Include="classes\AdjustPoint.cs" />
+    <Compile Include="classes\AutomatedLine.cs" />
+    <Compile Include="classes\KeyboardInput.cs" />
+    <Compile Include="classes\DrawLine.cs" />
+    <Compile Include="classes\LevelEditor.cs" />
+    <Compile Include="Text\Print.cs" />
+    <Compile Include="Foundational Classes\Linear Algebruh.cs" />
+    <Compile Include="Foundational Classes\TrigFun.cs" />
+    <Compile Include="classes\Menu Navication.cs" />
     <Compile Include="classes\Animation Manager.cs" />
     <Compile Include="classes\Draw.cs" />
+    <Compile Include="classes\Paralax.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

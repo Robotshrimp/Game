@@ -5,11 +5,11 @@ namespace GameJom
 {
     class TrigFun
     {
-        public static double pythag_hypotenus(Vector Bases)
+        public static double pythag_hypotenus(Point Bases)
         {
             return Math.Sqrt(Bases.X * Bases.X + Bases.Y * Bases.Y);
         }
-        public static float Angle2(Vector Coordnet)
+        public static float Angle2(Point Coordnet)
         {
             double length = pythag_hypotenus(Coordnet);
             if (length == 0)
@@ -25,9 +25,9 @@ namespace GameJom
         }
         public static Vector2 Angle3(Vector3 Coordnet)
         {
-            double XZAngle = Angle2(new Vector((int)Coordnet.Z, (int)Coordnet.X));
-            double hypotenus = pythag_hypotenus(new Vector((int)Coordnet.Z, (int)Coordnet.X));
-            return new Vector2((float)XZAngle, Angle2(new Vector((int)hypotenus, (int)Coordnet.Y))/*this is only for calculating the angle on the z axis, values outside of 90 to -90 degree should be impossible because then the angle on the x-y plain would change instead*/);
+            double XZAngle = Angle2(new Point((int)Coordnet.Z, (int)Coordnet.X));
+            double hypotenus = pythag_hypotenus(new Point((int)Coordnet.Z, (int)Coordnet.X));
+            return new Vector2((float)XZAngle, Angle2(new Point((int)hypotenus, (int)Coordnet.Y))/*this is only for calculating the angle on the z axis, values outside of 90 to -90 degree should be impossible because then the angle on the x-y plain would change instead*/);
         }
     }
 }

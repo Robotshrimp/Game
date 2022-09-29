@@ -9,17 +9,17 @@ namespace GameJom
         static SpriteBatch spriteBatch = Game1.spriteBatch;
         static GraphicsDeviceManager graphics = Game1.graphics;
         static double ScreenSizeAdjustment = Game1.ScreenSizeAdjustment;
-        static Vector CalculationScreenSize = Game1.calculationScreenSize;
+        static Point CalculationScreenSize = Game1.calculationScreenSize;
         //constructor variables
 
-        Rectangle DisplayLocation;
-        Vector Centering;
+        Rectangle DisplayLocation;//bounding box of where the sprites will be rendered, anythng outside this rectangle is not drawn
+        Point Centering; // 
         Color Color;
         public double Zoom;
         public bool Drawn;
         // constructor, this takes the camera properties as paramters
 
-        public AutomatedDraw(Rectangle displayLocation, Vector centering, Color color, bool drawn = true, double zoom = 1)
+        public AutomatedDraw(Rectangle displayLocation, Point centering, Color color, bool drawn = true, double zoom = 1)
         {
             this.Centering = centering;
             this.DisplayLocation = displayLocation;
@@ -31,9 +31,17 @@ namespace GameJom
             : this(displayLocation, 
                   
                   //this code gets 3840 / 2 and 2160 / 2
-                  new Vector((int)(displayLocation.Width / 2 / ScreenSizeAdjustment), (int)(displayLocation.Height / 2 / ScreenSizeAdjustment)), 
+                  new Point((int)(displayLocation.Width / 2 / ScreenSizeAdjustment), (int)(displayLocation.Height / 2 / ScreenSizeAdjustment)), 
                   
-                  color, drawn, zoom) { }
+                  color, drawn, zoom)
+        {
+
+        }
+        public AutomatedDraw()
+            : this(new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White)
+        {
+            
+        }
 
         // the draw code that coombines individrual draw parameters and constructor parameters and draws the result
 
@@ -67,35 +75,55 @@ namespace GameJom
             draw(locationShape, texture, Color);
         }
 
+
+
+
+
+        Point point = new Point();
+
+
+        public Point PointScale(Point point)
+        {
+            return new Point(
+                (int)((point.X - Centering.X) * ScreenSizeAdjustment * Zoom + DisplayLocation.Width / 2) + DisplayLocation.X ,
+                (int)((point.Y - Centering.Y) * ScreenSizeAdjustment * Zoom + DisplayLocation.Height / 2) + DisplayLocation.Y);
+        }
+
+        public Point PointUnScale(Point point)
+        {
+            return new Point(
+                (int)((point.X - DisplayLocation.X - DisplayLocation.Width / 2) / (ScreenSizeAdjustment * Zoom)) + Centering.X,
+                (int)((point.Y - DisplayLocation.Y - DisplayLocation.Height / 2) / (ScreenSizeAdjustment * Zoom)) + Centering.Y);
+        }
+
+        public int LenScale(int len)
+        {
+            return (int)(len * ScreenSizeAdjustment * Zoom);
+        }
+        public int LenUnScale(int len)
+        {
+            return (int)(len / (ScreenSizeAdjustment * Zoom));
+        }
+
+
+
+
+
+
+
+
         public Rectangle DisplayRectangle(Rectangle locationShape)
         {
-            Rectangle calculationRectangle = new Rectangle(
-                locationShape.X - Centering.X,
-                locationShape.Y - Centering.Y,
-                locationShape.Width,
-                locationShape.Height);
+
             return new Rectangle(
-
-                    (int)((calculationRectangle.X
-                    * ScreenSizeAdjustment * Zoom + DisplayLocation.Width / 2) + DisplayLocation.X 
-                    ),
-
-                    (int)((calculationRectangle.Y 
-                    * ScreenSizeAdjustment * Zoom + DisplayLocation.Height / 2) + DisplayLocation.Y
-                    ),
-
-                    (int)((calculationRectangle.Width)
-                    * ScreenSizeAdjustment * Zoom
-                    ),
-                    (int)((calculationRectangle.Height)
-                    * ScreenSizeAdjustment * Zoom
-
-                    ));
+                    PointScale(locationShape.Location),
+                    new Point(LenScale(locationShape.Width), LenScale(locationShape.Height))
+                    );
         }
 
         //for calculating where Calculation Rechtangle would be for the given
 
-        public Rectangle CalculationRectangle(Rectangle displayShape)
+        public Rectangle DisplayToCalculation(Rectangle displayShape)
         {
             return new Rectangle(
                 (int)((displayShape.X - DisplayLocation.X - DisplayLocation.Width / 2) / (ScreenSizeAdjustment * Zoom)) + Centering.X,
